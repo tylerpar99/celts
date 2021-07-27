@@ -158,18 +158,38 @@ programs = [
     {
         "id": 1,
         "programName": "Empty Bowls",
+        "isStudentLed": True,
+        "isBonnerScholars": False,
     },
     {
         "id": 2,
         "programName": "Berea Buddies",
+        "isStudentLed": True,
+        "isBonnerScholars": False,
     },
     {
         "id": 3,
         "programName": "Adopt A Grandparent",
+        "isStudentLed": True,
+        "isBonnerScholars": False,
     },
     {
         "id": 4,
-        "programName": "No Required Events"
+        "programName": "No Required Events",
+        "isStudentLed": False,
+        "isBonnerScholars": False,
+    },
+    {
+        "id": 5,
+        "programName": "First Year Bonners",
+        "isStudentLed": False,
+        "isBonnerScholars": True,
+    },
+    {
+        "id": 6,
+        "programName": "A Program for Training and Education",  #FIXME: Change this to a real CELTS Program
+        "isStudentLed": False,
+        "isBonnerScholars": False,
     },
     {
         "id": 5,
@@ -557,7 +577,7 @@ eventParticipants = [
         "rsvp": True,
         "attended": True,
         "hoursEarned": 2,
-        },
+    },
     {
         "user": "khatts",
         "event": 5,
