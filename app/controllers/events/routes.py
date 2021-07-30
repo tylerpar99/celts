@@ -2,6 +2,7 @@ from flask import request, render_template, g
 from flask import Flask, redirect, flash
 from app.controllers.events import events_bp
 from app.models.term import Term
+from app.models.eventParticipant import EventParticipant
 from app.logic.events import groupEventsByCategory
 from app.logic.getUpcomingEvents import getUpcomingEventsForUser
 
@@ -20,6 +21,13 @@ def events(term):
 
 @events_bp.route('/events/upcoming_events', methods=['GET'])
 def showUpcomingEvent():
+    participantUser = (EventParticipant.select()
+                                  .where(EventParticipant.user == g.current_user,
+                                  EventParticipant.rsvp == True)
+                                  )
+    participantUser = [participant.event.id for participant in participantUser]
+    print(participantUser)
     upcomingEvents = getUpcomingEventsForUser(g.current_user)
     return render_template('/events/showUpcomingEvents.html',
-                            upcomingEvents = upcomingEvents)
+                            upcomingEvents = upcomingEvents,
+                            participantUser = list(participantUser))
