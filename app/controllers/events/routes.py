@@ -38,7 +38,6 @@ def showUpcomingEvent():
     return render_template('/events/showUpcomingEvents.html',
                             upcomingEvents = upcomingEvents,
                             participantUser = list(participantUser))
-                            upcomingEvents = upcomingEvents)
 
 
 @events_bp.route('/<eventid>/kiosk', methods=['GET'])

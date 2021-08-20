@@ -4,6 +4,8 @@
 {{super()}}
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/addParticipants.js') }}?u={{lastStaticUpdate}}"></script>
+  <script src="/static/js/event_list.js"></script>
+
 {% endblock %}
 
 {% block app_content %}
@@ -27,7 +29,8 @@
       <td>{{event.startDate}}</td>
       <td>{{event.endDate}}</td>
       <td>
-        <button class="btn {{ 'btn-secondary disabled' if event.id in participantUser else 'btn-primary' }}">RSVP</button>
+        {% if event.id in participantUser%}
+          <button class="btn {{ 'btn-secondary disabled' if event.id in participantUser else 'btn-primary' }}">RSVP</button>
       </td>
     </tr>
     {% endfor %}
