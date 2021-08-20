@@ -1,4 +1,3 @@
-from app.models.program import Program
 from app.models.programEvent import ProgramEvent
 from app.models.interest import Interest
 from app.models.event import Event

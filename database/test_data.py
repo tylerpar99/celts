@@ -96,12 +96,21 @@ users = [
     },
     {
         "username": "bryanta",
-        "bnumber": "B00715348",
+        "bnumber": "B00708826",
         "email": "bryanta@berea.edu",
         "firstName": "Alex",
         "lastName": "Bryant",
         "isStudent": True,
         "phoneNumber": "85943311598"
+    },
+    {
+        "username": "partont",
+        "bnumber": "B00751360",
+        "email": "partont@berea.edu",
+        "firstName": "Tyler",
+        "lastName": "Parton",
+        "isStudent": True,
+        "phoneNumber": "9119119111"
     },
 
 ]
@@ -192,7 +201,7 @@ programs = [
     },
     {
         "id": 6,
-        "programName": "A Program for Training and Education",  #FIXME: Change this to a real CELTS Program
+        "programName": "Habitat For Humanity",  
         "isStudentLed": False,
         "isBonnerScholars": False,
     }
@@ -285,7 +294,6 @@ events = [
         "endDate": datetime.strptime("2022 6 12","%Y %m %d")
     },
     {
-
         "id": 8,
         "term": 3,
         "eventName": "Adoption",
@@ -434,8 +442,9 @@ program_events = [
         "event_id": 12,
         "program_id": 3
     },
+
     {
-        "event_id": 13,
+        "event_id": 14,
         "program_id": 5
     },
     {
@@ -545,6 +554,13 @@ eventParticipants = [
         "hoursEarned": 2
     },
     {
+        "user": "bryanta",
+        "event": 1,
+        "rsvp": False,
+        "attended": False,
+        "hoursEarned": 0
+    },
+    {
         "user": "neillz",
         "event": 3,
         "rsvp": True,
@@ -581,6 +597,13 @@ eventParticipants = [
     },
     {
         "user": "khatts",
+        "event": 3,
+        "rsvp": True,
+        "attended": False,
+        "hoursEarned": 3,
+    },
+    {
+        "user": "khatts",
         "event": 2,
         "rsvp": True,
         "attended": True,
@@ -588,8 +611,15 @@ eventParticipants = [
     },
     {
         "user": "khatts",
-        "event": 5,
+        "event": 7,
         "rsvp": True,
+        "attended": True,
+        "hoursEarned": 3,
+    },
+    {
+        "user": "khatts",
+        "event": 5,
+        "rsvp": False,
         "attended": True,
         "hoursEarned": 8,
     },
@@ -658,6 +688,27 @@ eventParticipants = [
         "attended": True,
         "hoursEarned": 12
     },
+    {
+        "user": "partont",
+        "event": 1,
+        "rsvp": False,
+        "attended": True,
+        "hoursEarned": 1
+    },
+    {
+        "user": "partont",
+        "event": 2,
+        "rsvp": False,
+        "attended": True,
+        "hoursEarned": 5
+    },
+    {
+        "user": "partont",
+        "event": 7,
+        "rsvp": False,
+        "attended": True,
+        "hoursEarned": 8
+    },
 ]
 EventParticipant.insert_many(eventParticipants).on_conflict_replace().execute()
 
@@ -666,6 +717,10 @@ interest = [
     {
         "program": 1,
         "user": "khatts"
+    },
+    {
+        "program": 1,
+        "user": "bryanta"
     },
     {
         "program": 2,
@@ -690,8 +745,14 @@ bannedUser = [
     {
         "user": "khatts",
         "program": 3,
+    },
+
+    {
+        "user": "ayisie",
+        "program": 1,
     }
 ]
+
 ProgramBan.insert_many(bannedUser).on_conflict_replace().execute()
 
 facilitators = [

@@ -1,6 +1,5 @@
 from dateutil import parser
 from app.models.event import Event
-from app.models.term import Term
 from flask import request
 from app.controllers.admin import admin_bp
 from app.logic.adminNewEvent import eventEdit
@@ -18,17 +17,16 @@ def addRecurringEvents():
 @admin_bp.route('/createEvent', methods=['POST'])
 def createEvent():
 
-    if not g.current_user.isCeltsAdmin:
-
+    if not (g.current_user.isCeltsAdmin or g.current_user.isCeltsStudentStaff):
         flash("Only celts admins can create an event!", 'warning')
-        return redirect(url_for("admin.createEventPage", program=2)) #FIXME: have this redirect to main programs page (or some appropriate non admin page).
+        return redirect(url_for("main.profilePage", username = g.current_user.username))
 
     else:
         eventData = request.form.copy() # request.form returns a immutable dict so we need to copy to make changes
         newEventData= setValueForUncheckedBox(eventData)
         eventId = newEventData['eventId']
-        #if an event is not recurring then it wil have same end and start date
 
+        #if an event is not recurring then it will have same end and start date
         if newEventData['eventEndDate'] == '':
             newEventData['eventEndDate'] = newEventData['eventStartDate']
 
@@ -40,25 +38,13 @@ def createEvent():
 
         if dataIsValid:
             if not eventId:
-
                 createNewEvent(newEventData)
                 flash("Event successfully created!", 'success')
-                return redirect(url_for("admin.createEventPage", program=newEventData['programId']))
-
+                return redirect(url_for("events.events", term = newEventData['eventTerm']))
             else:
                 eventEdit(newEventData)
                 flash("Event successfully updated!")
-                return redirect(url_for("admin.createEventPage", program=newEventData['programId']))
+                return redirect(url_for("events.events", term = newEventData['eventTerm']))
         else:
             flash(validationErrorMessage, 'warning')
-            return redirect(url_for("admin.createEventPage", program=2)) #FIXME: have this redirect to main programs page (or some appropriate non admin page).
-
-
-
-def selectFutureTerms(currentTermid):
-    futureTerms = (Term.select().where(Term.id >= currentTermid)
-                                .where((Term.year <= (Term.get_by_id(currentTermid)).year + 2)))
-
-    listOfTerms = [future.description for future in futureTerms]
-
-    return listOfTerms
+            return redirect(url_for("admin.createEventPage", program = newEventData['programId']))
