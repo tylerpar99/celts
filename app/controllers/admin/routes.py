@@ -17,6 +17,8 @@ from app.controllers.admin import admin_bp
 from app.controllers.admin.volunteers import getVolunteers
 from app.controllers.admin.eventCreation import createEvent, addRecurringEvents
 from datetime import datetime
+from app.logic.deleteCourseProposal import deleteCourseProposal
+
 
 @admin_bp.route('/<programID>/<eventID>/track_volunteers', methods=['GET'])
 def trackVolunteersPage(programID, eventID):
@@ -150,3 +152,9 @@ def addParticipants():
 
     return render_template('addParticipants.html',
                             title="Add Participants")
+
+@admin_bp.route('/editProposal/<courseID>')
+def editCourseProposal(courseID):
+    deleteCourseProposal(courseID)
+    print("Nothing is happening here")
+    return "Editing the Course"

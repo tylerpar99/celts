@@ -201,7 +201,7 @@ programs = [
     },
     {
         "id": 6,
-        "programName": "Habitat For Humanity",  
+        "programName": "Habitat For Humanity",
         "isStudentLed": False,
         "isBonnerScholars": False,
     }
@@ -457,7 +457,16 @@ ProgramEvent.insert_many(program_events).on_conflict_replace().execute()
 coursestatus = [
     {
         "status": "Approve"
-    }
+
+    },
+    {
+        "status":"Pending"
+    },
+    {
+        "status":"Completed"
+    },
+
+
 ]
 CourseStatus.insert_many(coursestatus).on_conflict_replace().execute()
 
@@ -482,7 +491,24 @@ courses = [
         "id": 2,
         "courseName": "Spanish Help",
         "term": 1,
-        "status": 1,
+        "status": 2,
+        "courseCredit": "",
+        "createdBy": "",
+        "isAllSectionsServiceLearning": True,
+        "isPermanentlyDesignated": False,
+        "sectionBQuestion1": "",
+        "sectionBQuestion2": "",
+        "sectionBQuestion3": "",
+        "sectionBQuestion4": "",
+        "sectionBQuestion5": "",
+        "sectionBQuestion6": ""
+
+    },
+    {
+        "id": 3,
+        "courseName": "Electricity",
+        "term": 2,
+        "status": 3,
         "courseCredit": "",
         "createdBy": "",
         "isAllSectionsServiceLearning": True,
