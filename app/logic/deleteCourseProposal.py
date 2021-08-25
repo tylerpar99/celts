@@ -13,5 +13,5 @@ def deleteCourseProposal(courseID):
 
         if course.id == courseID.id and course.status_id == 2:
             print("Inside the for loop ")
-            course.delete_instance()
+            # course.delete_instance()
             print("deletion was successul")
