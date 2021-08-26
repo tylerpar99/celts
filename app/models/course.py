@@ -16,3 +16,5 @@ class Course(baseModel):
     sectionBQuestion4 = CharField()
     sectionBQuestion5 = CharField()
     sectionBQuestion6 = CharField()
+
+# Check if we need ondelete cascade. 
