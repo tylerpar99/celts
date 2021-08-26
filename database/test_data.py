@@ -456,7 +456,7 @@ ProgramEvent.insert_many(program_events).on_conflict_replace().execute()
 
 coursestatus = [
     {
-        "status": "Approve"
+        "status": "Approved"
 
     },
     {
@@ -464,6 +464,9 @@ coursestatus = [
     },
     {
         "status":"Completed"
+    },
+    {
+        "status": "Require Edit"
     },
 
 
