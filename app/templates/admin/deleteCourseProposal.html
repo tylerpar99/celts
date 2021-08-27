@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{{super()}}
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/addParticipants.js') }}?u={{lastStaticUpdate}}"></script>
+{% endblock %}
+
+{% block app_content %}
+
+    <h1>Course Poposal Page</h1>
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Action
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><a class="dropdown-item" href="#">Renew</a></li>
+    <li><a class="dropdown-item" href="#">View</a></li>
+    <li><a class="dropdown-item" href="#">Withdraw</a></li>
+    <li><a class="dropdown-item" href="#">Edit</a></li>
+  </ul>
+</div>
+
+{% endblock %}

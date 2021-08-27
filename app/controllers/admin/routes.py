@@ -155,6 +155,8 @@ def addParticipants():
 
 @admin_bp.route('/editProposal/<courseID>')
 def editCourseProposal(courseID):
-    deleteCourseProposal(courseID)
-    print("Nothing is happening here")
-    return "Editing the Course"
+    '''Renders the page, will be removed once merged with full page of Course Proposal Management'''
+
+    return render_template('/admin/deleteCourseProposal.html',
+                            delete = deleteCourseProposal(courseID)
+                            )
