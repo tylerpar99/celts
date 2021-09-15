@@ -23,8 +23,24 @@ function changeAction(action){
     $('#withdrawModal').modal('show');
 
   } else if(action.value=="Edit"){
-    // Edit
+    courseID = action.id
+    $('.modal-body #courseToEdit').val(courseID)
+    $('#editModal').modal('show');
   }
+}
+
+function edit(){
+  courseID = $("#courseToEdit").val()
+  $.ajax({
+    url: "/editCourse/"+ courseID,
+    type: "POST",
+    success: function(s){
+      location.reload()
+    },
+    error: function(request, status, error) {
+        console.log(status,error);
+      }
+  })
 }
 
 function withdraw(){
