@@ -33,13 +33,11 @@ $(document).ready(function(){
     }
   });
 
-$(document).ready(function(){
-  if($(".datePicker").is("readonly")){
-    $( ".datePicker" ).datepicker( "option", "disabled", true );
-}
+    //makes the input fields act like readonly (readonly doesn't work with required)
+    if($(".datePicker").is("readonly")){
+        $( ".datePicker" ).datepicker( "option", "disabled", true );
+    }
 
-});
-  //makes the input fields act like readonly (readonly doesn't work with required)
   $(".readonly").on('keydown paste', function(e){ 
         if(e.keyCode != 9) // ignore tab
             e.preventDefault();

@@ -14,7 +14,7 @@ templates = [
         "id": 2,
         "name": "All Volunteer Training",
         "tag": "all-volunteer",
-        "templateJSON": '{"name": "All Volunteer Training","description": "Training for all CELTS programs", "isTraining": true, "isService": false, "isRequired": true}',
+        "templateJSON": '{"name": "All Volunteer Training","description": "Training for all CELTS programs", "isTraining": true, "isService": false}',
         "templateFile": "createSingleEvent.html",
         "isVisible": True
     },
@@ -30,7 +30,7 @@ templates = [
         "id": 4,
         "name": "Student-Led Program Training",
         "tag": "student-led-trainings",
-        "templateJSON": '{}',
+        "templateJSON": '{"isTraining": true, "isService": false }',
         "templateFile": "createStudentLedTrainingEvents.html",
         "isVisible": True
     },

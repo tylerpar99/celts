@@ -33,12 +33,6 @@ def test_event_model():
     assert event.singleProgram == None
     assert not event.noProgram
 
-######################################################################
-## TODO event list doesn't show events without a program
-## TODO facilitators didn't stay selected when there was a validation error
-## 
-######################################################################
-
 @pytest.mark.integration
 def test_getAllEvents():
     # No program is given, get all events

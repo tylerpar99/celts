@@ -1,0 +1,71 @@
+{% extends "base.html"%}
+
+{% block scripts %}
+  {{super()}}
+  <script src="/static/js/createEvents.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+{% endblock %}
+
+{% block styles %}
+  {{super()}}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+{% endblock %}
+
+{% block app_content %}
+<div align="center" style="margin-bottom: 50px;">
+  <h1 id="title">Create Student-Led Trainings</h1>
+  <form data-toggle="validator" role="form" action="{{request.path}}" method="POST">
+  {% for p in programs %}
+    {% set eventName = p.programName + " Initial Training" %}
+    {% if p.isStudentLed %}
+    <h4>{{eventName}}</h4>
+      <input type="hidden" name="name{{p.id}}" value="{{eventName}}" />
+      <input type="hidden" name="programids" value="{{p.id}}" />
+    <div class="form-group">
+      <label for='location{{p.id}}'><strong>Location</strong></label><br>
+      <input class="form-control" type="text" name="location{{p.id}}" value="{{eventData.location}}" required>
+    </div>
+
+    <!-- Start and End Time -->
+    <div class="flex-container"> <br>
+      <div class="form-inline d-flex">
+        <div  class="form-group" >
+          <div class="d-inline-flex">
+            <label for="startTime{{p.id}}"><strong>Start Time</strong></label>
+            <input type='time' class="form-control timePicker" id='pickStartTime' name="timeStart{{p.id}}" required>
+          </div>
+          <div class='form-group time d-inline-flex' style="padding: 0 0 0 2rem">
+            <label for="endTime{{p.id}}"><strong>End Time</strong></label>
+            <input type='time' class="form-control timePicker" id='pickEndTime' name="timeEnd{{p.id}}" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div  class="form-group" >
+      <div class="d-inline-flex" >
+        <label for="eventDate{{p.id}}" id="startDatePickerLabel" ><strong>Event Date</strong></label><br>
+        <div class='input-group date' id="startDate">
+          <input type='text' class="form-control datePicker readonly" name="startDate{{p.id}}" placeholder="Event Date" required>
+
+          <div class="input-group-text" id="calendarIconStart">
+            <span><i class="bi bi-calendar-plus-fill"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='form-group'>
+      <label for='facilitators'><strong>Facilitators</strong></label> <br>
+        <select class="form-select" multiple id="inputEventFacilitators"  name="facilitators{{p.id}}" >
+        {% for f in allFacilitators %}
+          <option value="{{f.username}}"> {{f.firstName}} {{f.lastName}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+  {% endfor %}
+    <button type="submit" id="saveEvent" class="btn btn-primary" >Save</button>
+  </form>
+</div>
+{% endblock %}

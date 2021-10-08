@@ -62,7 +62,6 @@ def createEvent(templateid, programid=None):
         # TODO need to handle the multiple programs case
         eventData["program"] = program
 
-
     # Try to save the form
     if request.method == "POST":
         try:
@@ -84,10 +83,40 @@ def createEvent(templateid, programid=None):
     futureTerms = selectFutureTerms(g.current_term)
 
     return render_template(f"/admin/{template.templateFile}",
+            programs = Program.select().order_by(Program.programName),
             template = template,
             eventData = eventData,
             futureTerms = futureTerms,
             allFacilitators = getAllFacilitators())
+
+@admin_bp.route('/event/<templateid>/multisave', methods=['POST'])
+def multisave(templateid):
+    if not g.current_user.isAdmin:
+        abort(403)
+
+    try:
+        template = EventTemplate.get_by_id(templateid)
+    except DoesNotExist as e:
+        print(f"Invalid template id {templateid}")
+        abort(404)
+
+    for pid in request.form.getlist('programid'):
+        eventData = template.templateData
+        eventData['name'] = request.form[f"name{pid}"]
+        eventData['location'] = request.form[f"location{pid}"]
+        eventData['startTime'] = request.form[f"startTime{pid}"]
+        eventData['endTime'] = request.form[f"endTime{pid}"]
+        eventData['startDate'] = request.form[f"startDate{pid}"]
+        eventData['facilitators'] = request.form.getlist([f"facilitators{pid}"])
+
+        print(eventData)
+        preprocessEventData(eventData)
+        saveSuccess, validationErrorMessage = attemptSaveEvent(eventData)
+        print(saveSucces, validationErrorMessage)
+
+    # TODO implement failure cases
+    flash("Trainings created successfully!")
+    return redirect(url_for("main.events"))
 
 
 @admin_bp.route('/event/<eventId>/edit', methods=['GET','POST'])
