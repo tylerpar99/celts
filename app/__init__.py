@@ -48,8 +48,8 @@ app.register_blueprint(admin_bp)
 from app.controllers.events import events_bp as events_bp
 app.register_blueprint(events_bp)
 
-from app.controllers.main import main_bp as main_bp
-app.register_blueprint(main_bp)
+from app.controllers.volunteer import volunteer_bp as volunteer_bp
+app.register_blueprint(volunteer_bp)
 ##################################
 
 # Make 'ENV' a variable everywhere

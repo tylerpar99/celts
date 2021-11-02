@@ -153,7 +153,7 @@ def volunteerProfile():
 @admin_bp.route('/search_student', methods=['GET','POST'])
 def studentSearchPage():
     if g.current_user.isAdmin:
-        return render_template("/searchStudentPage.html")
+        return render_template("/admin/searchStudentPage.html")
     abort(403)
 
 @admin_bp.route('/addParticipants', methods = ['GET'])

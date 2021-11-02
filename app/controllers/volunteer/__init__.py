@@ -1,10 +1,10 @@
 from flask import Blueprint
 
 # Blueprint Configuration
-main_bp = Blueprint(
-    'main', __name__,
+volunteer_bp = Blueprint(
+    'volunteer', __name__,
     template_folder='templates',
     static_folder='static'
 )
 
-from app.controllers.main import routes
+from app.controllers.volunteer import routes

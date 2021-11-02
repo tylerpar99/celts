@@ -10,15 +10,15 @@ from app.models.interest import Interest
 from app.models.term import Term
 from app.models.eventRsvp import EventRsvp
 
-from app.controllers.main import main_bp
+from app.controllers.volunteer import volunteer_bp
 from app.logic.events import *
 from app.logic.users import addRemoveInterest
 from app.logic.participants import userRsvpForEvent, unattendedRequiredEvents
 from app.logic.searchUsers import searchUsers
 from app.logic.transcript import *
 
-@main_bp.route('/', methods=['GET'])
-@main_bp.route('/events/<selectedTerm>', methods=['GET'])
+@volunteer_bp.route('/', methods=['GET'])
+@volunteer_bp.route('/events/<selectedTerm>', methods=['GET'])
 def events(selectedTerm=None):
     currentTerm = g.current_term
     if selectedTerm:
@@ -45,7 +45,7 @@ def events(selectedTerm=None):
         currentTime = currentTime,
         user = g.current_user)
 
-@main_bp.route('/profile/<username>', methods = ['GET'])
+@volunteer_bp.route('/profile/<username>', methods = ['GET'])
 def profilePage(username):
     if not g.current_user.isCeltsAdmin and not g.current_user.isCeltsStudentStaff and g.current_user.username != username:
         return "Access Denied", 403
@@ -70,8 +70,8 @@ def profilePage(username):
         print(e)
         return "Error retrieving user profile", 500
 
-@main_bp.route('/deleteInterest/<program_id>', methods = ['POST'])
-@main_bp.route('/addInterest/<program_id>', methods = ['POST'])
+@volunteer_bp.route('/deleteInterest/<program_id>', methods = ['POST'])
+@volunteer_bp.route('/addInterest/<program_id>', methods = ['POST'])
 def updateInterest(program_id):
     """
     This function updates the interest table by adding a new row when a user
@@ -86,7 +86,7 @@ def updateInterest(program_id):
         print(e)
         return "Error Updating Interest", 500
 
-@main_bp.route('/rsvpForEvent', methods = ['POST'])
+@volunteer_bp.route('/rsvpForEvent', methods = ['POST'])
 def volunteerRegister():
     """
     This function selects the user ID and event ID and registers the user
@@ -116,7 +116,7 @@ def volunteerRegister():
     return redirect(url_for("admin.editEvent", eventId=event.id))
 
 
-@main_bp.route('/rsvpRemove', methods = ['POST'])
+@volunteer_bp.route('/rsvpRemove', methods = ['POST'])
 def RemoveRSVP():
     """
     This function deletes the user ID and event ID from database when RemoveRSVP  is clicked
@@ -130,7 +130,7 @@ def RemoveRSVP():
     flash("Successfully unregistered for event!", "success")
     return redirect(url_for("admin.editEvent", eventId=event.id))
 
-@main_bp.route('/<username>/serviceTranscript', methods = ['GET'])
+@volunteer_bp.route('/<username>/serviceTranscript', methods = ['GET'])
 def serviceTranscript(username):
     user = User.get_or_none(User.username == username)
     if user is None:
@@ -154,7 +154,7 @@ def serviceTranscript(username):
                             startDate = startDate,
                             userData = user)
 
-@main_bp.route('/searchUser/<query>', methods = ['GET'])
+@volunteer_bp.route('/searchUser/<query>', methods = ['GET'])
 def searchUser(query):
     '''Accepts user input and queries the database returning results that matches user search'''
     try:
@@ -167,6 +167,6 @@ def searchUser(query):
         print(e)
         return "Error in searching for user", 500
 
-@main_bp.route('/contributors',methods = ['GET'])
+@volunteer_bp.route('/contributors',methods = ['GET'])
 def contributors():
     return render_template("/contributors.html")
