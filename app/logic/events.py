@@ -95,6 +95,7 @@ def saveEventToDb(newEventData):
 
     return eventRecords
 
+
 def getStudentLedProgram(term):
 
     studentLedEvents = (Event.select(Event, Program.id.alias("program_id"))

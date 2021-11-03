@@ -51,6 +51,7 @@
   </li>
   </ul>
 </div>
+
 {% macro createTable(events) %}
 {% if events.exists() %}
   <table class="table table-striped">
@@ -72,8 +73,11 @@
             <td>{{event.timeStart.strftime('%I:%M %p')}}</td>
             <td>{{event.location}}</td>
             {% if user.isAdmin %}
-              <td><i class="bi bi-envelope-fill"> Email</i></td>
-              {# FIXME: the Email icon should be clickable and lead to email template #}
+              <td>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="passEventInfo({{event.id}}, {{event.program_id}}, {{selectedTerm}})">
+                    <span class="bi bi-envelope-fill"> Email</span>
+                  </button>
+              </td>
             {% else %}
               {% if (event.startDate < currentTime.date()) or (event.timeStart < currentTime.time() and event.startDate == currentTime.date())%}
                 <td><button type="button" class="btn btn-primary" disabled>RSVP</button></td>
@@ -125,7 +129,6 @@
                   </tr>
                 </thead>
                 <tbody>
-
                     {% for event in events %}
                       <tr>
                         <td> <a href="/event/{{event.id}}/edit" class="link-primary">{{event.name}}</a></td>
@@ -133,11 +136,14 @@
                         <td>{{event.timeStart.strftime('%I:%M %p')}}</td>
                         <td>{{event.location}}</td>
                         {% if user.isAdmin %}
-                          <td><i class="bi bi-envelope-fill"> Email</i></td>
-                          {# FIXME: the Email icon should be clickable and lead to email template #}
-
+                          <td>
+                              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal"
+                              onclick="passEventInfo({{event.id}}, {{program.id}}, {{selectedTerm}})" {{ 'disabled' if event.isPast }}>
+                                <span class="bi bi-envelope-fill"> Email</span>
+                              </button>
+                          </td>
                         {% else %}
-                          {% if (event.startDate < currentTime.date()) or (event.timeStart < currentTime.time() and event.startDate == currentTime.date())%}
+                          {% if event.isPast%}
                             <td><button type="button" class="btn btn-primary" disabled>RSVP</button></td>
                           {% elif event.id in rsvpedEventsID %}
                             <td><button type="button" class="btn btn-danger" onclick="removeRsvpForEvent({{program.id}}, {{event.id}})">Remove RSVP</button></td>
@@ -152,7 +158,7 @@
             </div>
           </div>
         </div>
-      {% endfor %}
+    {% endfor %}
     </div>
     {% else %}
       <p>No upcoming events for this term</p>
@@ -170,5 +176,7 @@
     {{createTable(oneTimeEvents)}}
   </div>
 </div>
+
+{% include 'emailModal.html' %}
 
 {% endblock %}
