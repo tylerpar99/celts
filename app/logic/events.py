@@ -2,17 +2,18 @@ from peewee import DoesNotExist
 from dateutil import parser
 import datetime
 from werkzeug.datastructures import MultiDict
-
 from app.models import mainDB
 from app.models.user import User
 from app.models.event import Event
-from app.models.interest import Interest
 from app.models.facilitator import Facilitator
 from app.models.program import Program
 from app.models.programEvent import ProgramEvent
 from app.models.term import Term
+from app.models.programBan import ProgramBan
+from app.models.interest import Interest
 from app.models.eventTemplate import EventTemplate
 from app.models.programEvent import ProgramEvent
+
 
 def getEvents(program_id=None):
 
@@ -135,10 +136,44 @@ def getOneTimeEvents(term):
                                  Event.term == term))
     return oneTimeEvents
 
+def eventEdit(newEventData):
+
+    if newEventData['valid'] == True:
+
+        eventId = newEventData['eventId']
+        eventData = {
+                "id": eventId,
+                "term": newEventData['eventTerm'],
+                "eventName": newEventData['eventName'],
+                "description": newEventData['eventDescription'],
+                "timeStart": newEventData['eventStartTime'],
+                "timeEnd": newEventData['eventEndTime'],
+                "location": newEventData['eventLocation'],
+                "isRecurring": newEventData['eventIsRecurring'],
+                "isTraining": newEventData['eventIsTraining'],
+                "isRsvpRequired": newEventData['eventRSVP'],
+                "isService": newEventData['eventServiceHours'],
+                "startDate": parser.parse(newEventData['eventStartDate']),
+                "endDate": parser.parse(newEventData['eventEndDate'])
+            }
+        eventEntry = Event.update(**eventData).where(Event.id == eventId).execute()
+
+        if Facilitator.get_or_none(Facilitator.event == eventId):
+            updateFacilitator = (Facilitator.update(user = newEventData['eventFacilitator'])
+                                            .where(Facilitator.event == eventId)).execute()
+
+        else:
+            facilitatorEntry = Facilitator.create(user = newEventData['eventFacilitator'],
+                                                      event = eventId)
+
+    else:
+        raise Exception("Invalid Data")
+
+
+
 def getUpcomingEventsForUser(user,asOf=datetime.datetime.now()):
     """
         Get the list of upcoming events that the user is interested in.
-
         :param user: a username or User object
         :param asOf: The date to use when determining future and past events.
                       Used in testing, defaults to the current timestamp.
@@ -148,6 +183,8 @@ def getUpcomingEventsForUser(user,asOf=datetime.datetime.now()):
     events = (Event.select(Event)
                             .join(ProgramEvent)
                             .join(Interest, on=(ProgramEvent.program == Interest.program))
+                            # .join(ProgramBan, on=(ProgramEvent.program == ProgramBan.program))
+                            # .where(ProgramBan.program != ProgramEvent.program)
                             .where(Interest.user == user)
                             .where(Event.startDate >= asOf)
                             .where(Event.timeStart > asOf.time())
@@ -156,6 +193,7 @@ def getUpcomingEventsForUser(user,asOf=datetime.datetime.now()):
                             )
 
     return list(events)
+
 
 def getAllFacilitators():
 

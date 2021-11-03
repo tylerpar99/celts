@@ -7,13 +7,15 @@ from app.models.event import Event
 from app.models.user import User
 from app.models.eventParticipant import EventParticipant
 from app.models.interest import Interest
+from app.models.event import Event
+from app.models.programBan import ProgramBan
+from app.models.programEvent import ProgramEvent
 from app.models.term import Term
 from app.models.eventRsvp import EventRsvp
-
 from app.controllers.main import main_bp
 from app.logic.events import *
-from app.logic.users import addRemoveInterest
-from app.logic.participants import userRsvpForEvent, unattendedRequiredEvents
+from app.logic.users import addRemoveInterest, banUnbanUser, isEligibleForProgram
+from app.logic.participants import userRsvpForEvent, unattendedRequiredEvents, trainedParticipants
 from app.logic.searchUsers import searchUsers
 from app.logic.transcript import *
 
@@ -45,42 +47,72 @@ def events(selectedTerm=None):
         currentTime = currentTime,
         user = g.current_user)
 
-@main_bp.route('/profile/<username>', methods = ['GET'])
-def profilePage(username):
-    if not g.current_user.isCeltsAdmin and not g.current_user.isCeltsStudentStaff and g.current_user.username != username:
-        return "Access Denied", 403
-    try:
-        profileUser = User.get(User.username == username)
-        upcomingEvents = getUpcomingEventsForUser(username)
-        programs = Program.select()
-        interests = Interest.select().where(Interest.user == profileUser)
-        interests_ids = [interest.program.id for interest in interests]
-        rsvpedEventsList = EventRsvp.select().where(EventRsvp.user == profileUser)
-        rsvpedEvents = [event.event.id for event in rsvpedEventsList]
+@main_bp.route('/profile/<username>', methods=['GET'])
+def viewVolunteersProfile(username):
+    """
+    This function displays the information of a volunteer to the user
+    """
+    if (g.current_user.username == username) or g.current_user.isAdmin:
+         upcomingEvents = getUpcomingEventsForUser(username)
+         programs = Program.select()
+         interests = Interest.select().where(Interest.user == username)
+         programBan = ProgramBan.select().where(ProgramBan.user == username)
+         interests_ids = [interest.program for interest in interests]
+         eventParticipant = EventParticipant.select().where(EventParticipant.user == username)
+         currentTerm = Term.select().where(Term.isCurrentTerm == 1)
+         trainingEvents = (ProgramEvent.select().join(Event).where((Event.term == currentTerm) & (Event.isTraining == 1)))
+         trainingChecklist = {}
+         for program in programs:
+             trainingChecklist[program.id] = trainedParticipants(program.id)
+         eligibilityTable = []
+         for i in programs:
+             eligibilityTable.append({"program" : i,
+                                      "completedTraining" : (username in trainedParticipants(i)),
+                                      "isNotBanned" : isEligibleForProgram(i, username)})
+         return render_template ("/main/volunteerProfile.html",
+            programs = programs,
+            eventParticipant = eventParticipant,
+            interests = interests,
+            trainingEvents = trainingEvents,
+            programBan = programBan,
+            interests_ids = interests_ids,
+            trainingChecklist = trainingChecklist,
+            upcomingEvents = upcomingEvents,
+            eligibilityTable = eligibilityTable,
+            volunteer = User.get(User.username == username),
+            user = g.current_user)
+    abort(403)
 
-        return render_template('/volunteer/volunteerProfile.html',
-                               title="Volunteer Interest",
-                               user = profileUser,
-                               programs = programs,
-                               interests = interests,
-                               interests_ids = interests_ids,
-                               upcomingEvents = upcomingEvents,
-                               rsvpedEvents = rsvpedEvents)
+
+@main_bp.route('/banUnbanUser/<program_id>/<username>', methods=['POST'])
+def banUser(program_id, username):
+    """
+    This function updates the ban status of a username either when they are banned or unbanned from a program.
+    program_id: the primary id of the program the student is being banned or unbanned from
+    username: unique value of a user to correctly identify them
+    """
+    postData = request.form
+    banNote = postData["note"] # This contains the note left about the change
+    banOrUnban = postData["banOrUnban"] # Contains "Ban" or "Unban" to determine whether to ban or unban the user
+    banEndDate = postData["endDate"] # Contains the date the ban will no longer be effective
+    try:
+        return banUnbanUser(banOrUnban, program_id, username, banNote, banEndDate, g.current_user)
     except Exception as e:
         print(e)
-        return "Error retrieving user profile", 500
+        return "Error Updating Ban", 500
 
-@main_bp.route('/deleteInterest/<program_id>', methods = ['POST'])
-@main_bp.route('/addInterest/<program_id>', methods = ['POST'])
-def updateInterest(program_id):
+
+@main_bp.route('/deleteInterest/<program_id>/<username>', methods = ['POST'])
+@main_bp.route('/addInterest/<program_id>/<username>', methods = ['POST'])
+def updateInterest(program_id, username):
     """
     This function updates the interest table by adding a new row when a user
     shows interest in a program
     """
     rule = request.url_rule
-    user = g.current_user
+    username = username
     try:
-        return addRemoveInterest(rule, program_id, user)
+        return addRemoveInterest(rule, program_id, username)
 
     except Exception as e:
         print(e)
