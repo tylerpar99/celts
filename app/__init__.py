@@ -83,9 +83,12 @@ def queryCount():
         session['querycount'] = 0
 
 from app.logic.loginManager import getLoginUser
-from flask import g
+from flask import g, request
 @app.before_request
 def load_user():
+
+    if request.remote_addr == "10.16.16.32":
+        del session['current_user']
     if 'current_user' not in session:
         session['current_user'] = model_to_dict(getLoginUser())
 
