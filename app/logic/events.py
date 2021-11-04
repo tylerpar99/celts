@@ -1,5 +1,6 @@
 from peewee import DoesNotExist
 from dateutil import parser
+from flask_mail import Mail, Message
 import datetime
 from werkzeug.datastructures import MultiDict
 from app.models import mainDB
@@ -13,6 +14,7 @@ from app.models.programBan import ProgramBan
 from app.models.interest import Interest
 from app.models.eventTemplate import EventTemplate
 from app.models.programEvent import ProgramEvent
+from app.logic.emailHandler import getInterestedEmails, getParticipantEmails, emailHandler
 
 
 def getEvents(program_id=None):
@@ -41,6 +43,16 @@ def attemptSaveEvent(eventData):
 
     try:
         events = saveEventToDb(newEventData)
+        for event in events:
+            if event.singleProgram:
+                emailInfo = { 'emailSender': "CELTS Admins" }
+                email = emailHandler(emailInfo)
+                emails = getInterestedEmails(event.singleProgram)
+                message = f"A new CELTS event has been scheduled that you may be interested in!\n\n{event.name}\n{event.description}\n\nRSVP Here: http://172.31.2.141/event/{event.id}/edit"
+                emailSent = email.sendEmail(Message("A CELTS event you may be interested in!",
+                                                   emails, # recipients
+                                                   message),
+                                                   emails) # passed for sending individually
         return True, ""
     except Exception as e:
         print(e)
