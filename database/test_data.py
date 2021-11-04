@@ -742,6 +742,10 @@ interest = [
     {
         "program": 3,
         "user": "ramsayb2"
+    },
+    {
+        "program": 1,
+        "user": "neillz"
     }
 ]
 Interest.insert_many(interest).on_conflict_replace().execute()
