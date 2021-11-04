@@ -2,11 +2,9 @@ from flask import request, render_template, url_for, g, Flask, redirect, flash, 
 from peewee import DoesNotExist
 from playhouse.shortcuts import model_to_dict, dict_to_model
 import json
-
 from datetime import datetime
 from dateutil import parser
 from app import app
-
 from app.models.program import Program
 from app.models.event import Event
 from app.models.facilitator import Facilitator
@@ -47,7 +45,7 @@ def switchUser():
 def templateSelect():
     allprograms = Program.select().order_by(Program.programName)
     visibleTemplates = EventTemplate.select().where(EventTemplate.isVisible==True).order_by(EventTemplate.name)
-    
+
     return render_template("/events/template_selector.html",
                 programs=allprograms,
                 templates=visibleTemplates
@@ -159,12 +157,13 @@ def addRecurringEvents():
     recurringEvents = calculateRecurringEventFrequency(preprocessEventData(request.form.copy()))
     return json.dumps(recurringEvents, default=str)
 
+
 @admin_bp.route('/volunteerProfile', methods=['POST'])
 def volunteerProfile():
     volunteerName= request.form.copy()
     username = volunteerName['searchStudentsInput'].strip("()")
     user=username.split('(')[-1]
-    return redirect(url_for('main.profilePage', username=user))
+    return redirect(url_for('main.viewVolunteersProfile', username=user))
 
 @admin_bp.route('/search_student', methods=['GET'])
 def studentSearchPage():

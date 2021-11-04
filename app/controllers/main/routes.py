@@ -1,6 +1,5 @@
 from flask import request, render_template, g, abort, flash, redirect, url_for
-import datetime
-
+from datetime import datetime
 from app import app
 from app.models.program import Program
 from app.models.event import Event
@@ -13,6 +12,8 @@ from app.models.programEvent import ProgramEvent
 from app.models.term import Term
 from app.models.eventRsvp import EventRsvp
 from app.controllers.main import main_bp
+from app.logic.users import addRemoveInterest, banUnbanUser, isEligibleForProgram
+from app.logic.participants import userRsvpForEvent, unattendedRequiredEvents, trainedParticipants
 from app.logic.events import *
 from app.logic.users import addRemoveInterest, banUnbanUser, isEligibleForProgram
 from app.logic.participants import userRsvpForEvent, unattendedRequiredEvents, trainedParticipants
@@ -52,35 +53,39 @@ def viewVolunteersProfile(username):
     """
     This function displays the information of a volunteer to the user
     """
+    try:
+        volunteer = User.get(User.username == username)
+    except Exception as e:
+        print(e)
+        return "User does not exist", 404
     if (g.current_user.username == username) or g.current_user.isAdmin:
-         upcomingEvents = getUpcomingEventsForUser(username)
+         upcomingEvents = getUpcomingEventsForUser(volunteer)
          programs = Program.select()
-         interests = Interest.select().where(Interest.user == username)
-         programBan = ProgramBan.select().where(ProgramBan.user == username)
-         interests_ids = [interest.program for interest in interests]
-         eventParticipant = EventParticipant.select().where(EventParticipant.user == username)
-         currentTerm = Term.select().where(Term.isCurrentTerm == 1)
-         trainingEvents = (ProgramEvent.select().join(Event).where((Event.term == currentTerm) & (Event.isTraining == 1)))
-         trainingChecklist = {}
-         for program in programs:
-             trainingChecklist[program.id] = trainedParticipants(program.id)
+         interests = Interest.select().where(Interest.user == volunteer)
+         programsInterested = [interest.program for interest in interests]
+         # trainingChecklist = {}
+         # for program in programs:
+         #     trainingChecklist[program.id] = trainedParticipants(program.id)
          eligibilityTable = []
-         for i in programs:
-             eligibilityTable.append({"program" : i,
-                                      "completedTraining" : (username in trainedParticipants(i)),
-                                      "isNotBanned" : isEligibleForProgram(i, username)})
+         for program in programs:
+              notes = ProgramBan.select().where(ProgramBan.user == volunteer,
+                                                ProgramBan.program == program,
+                                                ProgramBan.endDate > datetime.datetime.now())
+              noteForDict = "None"
+              for j in notes:
+                  noteForDict = j.banNote.noteContent
+              eligibilityTable.append({"program" : program,
+                                       "completedTraining" : (volunteer in trainedParticipants(program)),
+                                       "isNotBanned" : isEligibleForProgram(program, volunteer),
+                                       "banNote": noteForDict})
          return render_template ("/main/volunteerProfile.html",
             programs = programs,
-            eventParticipant = eventParticipant,
             interests = interests,
-            trainingEvents = trainingEvents,
-            programBan = programBan,
-            interests_ids = interests_ids,
-            trainingChecklist = trainingChecklist,
+            programsInterested = programsInterested,
+            # trainingChecklist = trainingChecklist,
             upcomingEvents = upcomingEvents,
             eligibilityTable = eligibilityTable,
-            volunteer = User.get(User.username == username),
-            user = g.current_user)
+            volunteer = volunteer)
     abort(403)
 
 
