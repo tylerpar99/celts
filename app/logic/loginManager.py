@@ -37,6 +37,7 @@ def getUsernameFromEnvironment():
 
 def getLoginUser():
     username = getUsernameFromEnvironment()
+    print(request.remote_addr)
     if request.remote_addr == "10.16.16.32":
         username = "neillz"
 
