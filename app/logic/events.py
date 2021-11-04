@@ -48,7 +48,7 @@ def attemptSaveEvent(eventData):
                 emailInfo = { 'emailSender': "CELTS Admins" }
                 email = emailHandler(emailInfo)
                 emails = getInterestedEmails(event.singleProgram)
-                message = f"A new CELTS event has been scheduled that you may be interested in!\n\n{event.name}\n{event.description}\n\nRSVP Here: http://172.31.2.141/event/{event.id}/edit"
+                message = f"A new CELTS event has been scheduled that you may be interested in!\n\n{event.name}\n{event.description}\n\nRSVP Here: http://172.31.2.141:8080/event/{event.id}/edit"
                 emailSent = email.sendEmail(Message("A CELTS event you may be interested in!",
                                                    emails, # recipients
                                                    message),

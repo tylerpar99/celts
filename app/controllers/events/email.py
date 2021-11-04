@@ -2,7 +2,9 @@ from flask import Flask, redirect, flash, url_for, request, g
 from flask_mail import Mail, Message
 from app.models.interest import Interest
 from app.models.user import User
+from app.models.event import Event
 from app.models.eventParticipant import EventParticipant
+from app.models.programEvent import ProgramEvent
 from app.logic.emailHandler import getInterestedEmails, getParticipantEmails, emailHandler
 from app.controllers.events import events_bp
 from app import app
@@ -10,7 +12,12 @@ from app import app
 @events_bp.route('/email', methods=['POST'])
 def emailVolunteers():
     """ Uses emailHandler to send an email with the form in event_list. """
-    emailInfo = request.form
+    emailInfo = request.form.copy()
+    if emailInfo['programID'] == 'None':
+        program = ProgramEvent.get(ProgramEvent.event == emailInfo['eventID'])
+        emailInfo['programID'] = program.id
+        term = Event.get_by_id(emailInfo['eventID']).term
+        emailInfo['selectedTerm'] = term
 
     if emailInfo['emailRecipients'] == "interested":
         emails = getInterestedEmails(emailInfo['programID'])

@@ -74,7 +74,7 @@
             <td>{{event.location}}</td>
             {% if user.isAdmin %}
               <td>
-                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="passEventInfo({{event.id}}, {{event.program_id}}, {{selectedTerm}})">
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="passEventInfo({{event.id}}, 'None', {{selectedTerm}})"{{ 'disabled' if event.isPast }}>
                     <span class="bi bi-envelope-fill"> Email</span>
                   </button>
               </td>
