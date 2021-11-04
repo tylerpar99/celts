@@ -47,7 +47,7 @@ def switchUser():
 def templateSelect():
     allprograms = Program.select().order_by(Program.programName)
     visibleTemplates = EventTemplate.select().where(EventTemplate.isVisible==True).order_by(EventTemplate.name)
-
+    
     return render_template("/events/template_selector.html",
                 programs=allprograms,
                 templates=visibleTemplates
