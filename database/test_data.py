@@ -3,7 +3,6 @@ Chech phpmyadmin to see if your changes are reflected
 This file will need to be changed if the format of models changes (new fields, dropping fields, renaming...)'''
 
 from datetime import *
-from app.models.eventParticipant import EventParticipant
 from app.models.eventRsvp import EventRsvp
 from app.models.user import User
 from app.models.term import Term
@@ -168,7 +167,7 @@ terms = [
     },
     {
         "id": 5,
-        "description": "Fall Break 2021",
+        "description": "Spring 2022",
         "year": 2021,
         "academicYear": "2021-2022",
         "isBreak": True,
@@ -515,13 +514,13 @@ notes = [
     {
     "createdBy": "ramsayb2",
     "createdOn": datetime.strptime("2021 10 12","%Y %m %d"),
-    "noteContent": "This is the content: test",
+    "noteContent": "I think the training is put in wrong",
     "isPrivate":False
     },
     {
     "createdBy": "mupotsal",
     "createdOn": datetime.strptime("2021 10 12","%Y %m %d"),
-    "noteContent": " I am not sure aboutr what you mean here: test",
+    "noteContent": "I agree with your comment on training",
     "isPrivate":False
     }
 ]
@@ -657,150 +656,28 @@ eventParticipants = [
     {
         "user": "neillz",
         "event": 2,
-        "attended": True,
         "hoursEarned": 2
     },
     {
         "user": "bryanta",
-        "event": 1,
-        "attended": False,
+        "event": 5,
         "hoursEarned": 0
     },
     {
-        "user": "neillz",
-        "event": 3,
-        "attended": True,
-        "hoursEarned": 3
-    },
-    {
-        "user": "neillz",
-        "event": 4,
-        "attended": True,
-        "hoursEarned": 1
-    },
-    {
-        "user": "neillz",
-        "event": 5,
-        "attended": True,
-        "hoursEarned": 1
-    },
-    {
-        "user": "neillz",
-        "event": 1,
-        "attended": True,
-        "hoursEarned": 8,
-    },
-    {
-        "user": "khatts",
-        "event": 1,
-        "attended": True,
-        "hoursEarned": 3,
-    },
-    {
         "user": "khatts",
         "event": 3,
-        "attended": False,
         "hoursEarned": 3,
-    },
-    {
-        "user": "khatts",
-        "event": 2,
-        "attended": True,
-        "hoursEarned": 2,
-    },
-    {
-        "user": "khatts",
-        "event": 7,
-        "attended": True,
-        "hoursEarned": 3,
-    },
-    {
-        "user": "khatts",
-        "event": 5,
-        "attended": True,
-        "hoursEarned": 8,
     },
     {
         "user" : "ayisie",
-        "event" : "1",
-        "attended" : False,
+        "event" : 1,
         "hoursEarned" : None,
-    },
-    {
-        "user" : "lamichhanes2",
-        "event" : "1",
-        "attended" : True,
-        "hoursEarned" : None,
-
-    },
-    {
-        "user" : "lamichhanes2",
-        "event" : "3",
-        "attended" : True,
-        "hoursEarned" : None,
-    },
-    {
-        "user" : "lamichhanes2",
-        "event" : "4",
-        "attended" : True,
-        "hoursEarned" : None,
-
-    },
-    {
-        "user" : "lamichhanes2",
-        "event" : "8",
-        "attended" : True,
-        "hoursEarned" : None,
-    },
-    {
-        "user" : "lamichhanes2",
-        "event" : "9",
-        "attended" :True,
-        "hoursEarned" : None,
-    },
-    {
-        "user": "agliullovak",
-        "event": 3,
-        "attended": True,
-        "hoursEarned": 2
-    },
-    {
-        "user": "agliullovak",
-        "event": 6,
-        "attended": True,
-        "hoursEarned": 1
-    },
-    {
-        "user": "agliullovak",
-        "event": 10,
-        "attended": True,
-        "hoursEarned": 12
-    },
-    {
-        "user": "partont",
-        "event": 1,
-        "attended": True,
-        "hoursEarned": 1
     },
     {
         "user": "partont",
         "event": 2,
-        "attended": True,
         "hoursEarned": 5
-    },
-    {
-        "user": "partont",
-        "event": 7,
-        "attended": True,
-        "hoursEarned": 8
-    },
-
-    {
-        "user": "mupotsal",
-        "event": 7,
-        "attended": True,
-        "hoursEarned": 8
-    },
+    }
 ]
 EventParticipant.insert_many(eventParticipants).on_conflict_replace().execute()
 
@@ -809,9 +686,37 @@ eventRsvp =  [
         "user":"mupotsal",
         "event": 7,
     },
-
+    {
+        "user":"khatts",
+        "event": 3,
+    },
+    {
+        "user":"agliullovak",
+        "event": 6,
+    },
+    {
+        "user":"ayisie",
+        "event": 1,
+    },
+    {
+        "user":"bryanta",
+        "event": 5,
+    },
+    {
+        "user":"neillz",
+        "event": 2,
+    },
+    {
+        "user":"partont",
+        "event": 2,
+    },
+    {
+        "user":"lamichhanes2",
+        "event": 9,
+    }
 ]
 EventRsvp.insert_many(eventRsvp).on_conflict_replace().execute()
+
 interest = [
 
     {
