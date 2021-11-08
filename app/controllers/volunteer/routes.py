@@ -145,7 +145,7 @@ def serviceTranscript(username):
     totalHours = getTotalHours(username)
     startDate = getStartYear(username)
 
-    return render_template('main/serviceTranscript.html',
+    return render_template('volunteer/serviceTranscript.html',
                             programs = programs,
                             slCourses = slCourses.objects(),
                             trainingData = trainingData,

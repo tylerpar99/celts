@@ -1,7 +1,7 @@
 import pytest
 from app.logic.volunteers import getEventLengthInHours, updateEventParticipants
 from app.models.eventParticipant import EventParticipant
-from app.controllers.admin.volunteers import addVolunteerToEventRsvp
+from app.controllers.volunteer.volunteers import addVolunteerToEventRsvp
 from datetime import datetime
 from peewee import DoesNotExist
 
