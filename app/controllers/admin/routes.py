@@ -46,7 +46,7 @@ def templateSelect():
 
     return render_template("/events/template_selector.html",
                 programs=allprograms,
-                templates=visibleTemplates
+                templates=visibleTemplates  
             )
 
 @admin_bp.route('/event/<templateid>/create', methods=['GET','POST'])
