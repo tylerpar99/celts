@@ -4,7 +4,7 @@ pipeline {
 
     withPythonEnv('python3') {
         sh 'pip install pytest'
-        sh 'pytest test_course_management.py'
+        sh 'pytest test/code/test_course_management.py'
     }
 }
 }
