@@ -3,7 +3,8 @@ pipeline {
 {
    stage('Run pytest') 
    {
-       sh 'python.exe myscript.py'
+      echo"hahahahahah"
+//        sh 'python.exe myscript.py'
    }    
 }
 }
