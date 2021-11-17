@@ -3,7 +3,7 @@ pipeline {
 {
    stage('Run pytest') 
    {
-       bat "pytest test_course_management.py"
+       sh 'python.exe myscript.py'
    }    
 }
 }
