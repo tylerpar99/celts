@@ -10,7 +10,7 @@ pipeline {
 
     withPythonEnv('python3') {
         sh 'pip install pytest'
-        sh 'pytest mytest.py'
+        sh 'pytest myscript.py'
     }
 }
     }
