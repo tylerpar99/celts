@@ -1,9 +1,17 @@
 pipeline {
     agent any 
-      stage("test PythonEnv") {
-       withPythonEnv('python3') {
-        sh 'pip install pytest'
-        sh 'pytest myscript.py'
+    stages {
+        stage('Build') { 
+            steps {
+                // 
+            }
+        }
+        stage("test PythonEnv") {
+            steps{
+            withPythonEnv('python3') {
+                sh 'pip install pytest'
+                sh 'pytest mytest.py'
+            }
     }
 }
     }
