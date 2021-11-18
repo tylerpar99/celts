@@ -6,12 +6,9 @@ pipeline {
                 echo("Hello")
             }
         }
-        stage("test PythonEnv") {
+        stage("build") {
             steps{
-            withPythonEnv('python3') {
-                sh 'pip install pytest'
-                sh 'pytest mytest.py'
-            }
+                sh 'python mytest.py'
     }
 }
     }
