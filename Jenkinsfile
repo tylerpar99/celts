@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                sh "pip install python"
+                echo "pip install python"
             }
         }
         stage("build") {
