@@ -4,7 +4,7 @@ pipeline {
         stage('Build') { 
             steps {
                 echo "pip install python"
-                sh "./myscript.py"
+                python --v
             }
         }
     
