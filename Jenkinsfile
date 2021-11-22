@@ -6,9 +6,9 @@ pipeline {
                 echo "pip install python"
             }
         }
-        stage("build") {
+        stage("Build") {
             steps{
-                sh 'python myscript.py'
+                sh 'python.exe myscript.py'
     }
 }
     }
